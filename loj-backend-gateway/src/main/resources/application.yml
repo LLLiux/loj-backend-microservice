@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: loj-backend-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: loj-backend-user-service
+          uri: lb://loj-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: loj-backend-question-service
+          uri: lb://loj-backend-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: loj-backend-judge-service
+          uri: lb://loj-backend-judge-service
+          predicates:
+            - Path=/api/judge/**
+  main:
+    web-application-type: reactive
+server:
+  port: 8201
+knife4j:
+  gateway:
+    # 开启gateway聚合组件
+    enabled: true
+    # 设置聚合模式采用discover服务发现的模式
+    strategy: discover
+    discover:
+      # 开启discover模式
+      enabled: true
+      # 聚合子服务全部为Swagger2规范的文档
+      version: swagger2
